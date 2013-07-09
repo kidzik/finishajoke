@@ -62,6 +62,7 @@ function loadajoke(id)
 {
 	$.get("/joke/"+id+"/", function(result){
 		result = result.replace(/\n/g, "<br />");
+		result = result.replace('\\n', "<br />");
 		$(".joke").html(result + "<br />...");
 		changeCommentsUrl("http://www.finishajoke.com/#" + id);
 	})

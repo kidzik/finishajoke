@@ -1,8 +1,12 @@
 var express = require('express');
+var DEBUG = false;
 
+//var app = express(); 
 var app = express.createServer(express.logger())
-  , fs = require('fs')
-  , pg = require('pg');
+  , fs = require('fs');
+
+var pg = require('pg');
+if (DEBUG) pg = pg.native;
 
 
 function err(err) {
@@ -23,12 +27,16 @@ app.get('/', function(request, response) {
 });
 
 app.get('/joke/:id/', function(request, response) {
-	response.writeHead(200, {"Content-Type": "text/plain"});
-
-	pg.connect(process.env.DATABASE_URL, function(err, client) {
+	var url = 'postgres://whemmzhciixrlc:e0mza9iotx_Djfk-OH58VwFlj7@ec2-54-235-173-50.compute-1.amazonaws.com:5432/ddc48mh62mtkl1'
+			+ '?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory'
+	if (!DEBUG)
+		url = process.env.DATABASE_URL;
+	pg.connect(url, function(err, client) {
+		if (err) throw err;
+		response.writeHead(200, {"Content-Type": "text/plain"});
 		var query = client.query('SELECT content FROM jokes WHERE id=' + parseInt(request.params.id)); 
 		query.on('row', function(row) {
-			response.end(row[0]);
+			response.end(row['content']);
 		});
 	});
 });
