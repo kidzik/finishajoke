@@ -2,17 +2,12 @@ var express = require('express');
 
 var app = express.createServer(express.logger())
   , fs = require('fs')
-  , nStore = require('nstore');
+  , pg = require('pg');
 
-var jokes = nStore.new('data/jokes.db', function () {});
 
 function err(err) {
     if (err) { throw err; }
 }
-
-jokes.clear(function (err) {});
-jokes.save(1, {content: "A suicide bomber walks into a bar.\nBartender says \"We don't serve suicide bombers here\","}, err);
-jokes.save(2, {content: "A second joke,"}, err);
 
 app.get('/', function(request, response) {
 	fs.readFile(__dirname + '/html/index.html',
@@ -29,9 +24,11 @@ app.get('/', function(request, response) {
 
 app.get('/joke/:id/', function(request, response) {
 	response.writeHead(200, {"Content-Type": "text/plain"});
-	jokes.get(parseInt(request.params.id), function (err, doc, meta) {
-		response.end(doc['content']);
-	})
+
+	var query = client.query('SELECT content FROM jokes WHERE id=' + parseInt(request.params.id)); 
+	query.on('row', function(row) {
+		response.end(row[0]);
+	});
 });
 
 var port = process.env.PORT || 5000;
