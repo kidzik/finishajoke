@@ -27,10 +27,7 @@ app.get('/', function(request, response) {
 });
 
 app.get('/joke/:id/', function(request, response) {
-	var url = 'postgres://whemmzhciixrlc:e0mza9iotx_Djfk-OH58VwFlj7@ec2-54-235-173-50.compute-1.amazonaws.com:5432/ddc48mh62mtkl1'
-			+ '?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory'
-	if (!DEBUG)
-		url = process.env.DATABASE_URL;
+	var url = process.env.DATABASE_URL;
 	pg.connect(url, function(err, client) {
 		if (err) throw err;
 		response.writeHead(200, {"Content-Type": "text/plain"});
