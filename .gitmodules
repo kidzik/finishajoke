@@ -1,0 +1,9 @@
+[submodule "node_modules/nstore"]
+	path = node_modules/nstore
+	url = https://github.com/creationix/nstore.git
+[submodule "node_modules/pattern"]
+	path = node_modules/pattern
+	url = https://github.com/creationix/pattern.git
+[submodule "node_modules/step"]
+	path = node_modules/step
+	url = https://github.com/creationix/step.git

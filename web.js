@@ -10,6 +10,7 @@ function err(err) {
     if (err) { throw err; }
 }
 
+jokes.clear(function (err) {});
 jokes.save(1, {content: "A suicide bomber walks into a bar.\nBartender says \"We don't serve suicide bombers here\","}, err);
 jokes.save(2, {content: "A second joke,"}, err);
 
