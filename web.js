@@ -25,9 +25,11 @@ app.get('/', function(request, response) {
 app.get('/joke/:id/', function(request, response) {
 	response.writeHead(200, {"Content-Type": "text/plain"});
 
-	var query = client.query('SELECT content FROM jokes WHERE id=' + parseInt(request.params.id)); 
-	query.on('row', function(row) {
-		response.end(row[0]);
+	pg.connect(process.env.DATABASE_URL, function(err, client) {
+		var query = client.query('SELECT content FROM jokes WHERE id=' + parseInt(request.params.id)); 
+		query.on('row', function(row) {
+			response.end(row[0]);
+		});
 	});
 });
 
