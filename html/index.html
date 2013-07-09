@@ -1,52 +1,99 @@
-<html>
+<html xmlns:fb="http://ogp.me/ns/fb#">
 <head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<link href='http://fonts.googleapis.com/css?family=Acme' rel='stylesheet' type='text/css'>
 <title>Finish a joke</title>
 <style>
+body,h1,font,div { font-family: 'Acme' }
 body {
 	background-color: #333;
+	margin: 0 auto;
 }
 .joke {
-	font-size: 20px;
+	font-size: 25px;
 	color: #eeeeee;
 	text-align: center;
 	margin-top: 100px;
 }
-.fb-comments-parent {
+#comments {
 	text-align: center;
 }
 .finish {
 	color: #cccccc;
 	font-size: 17px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	text-align: center;
 }
 h1 {
 	font-size: 22px;
 	color: #cccccc;
+	background-color: #000000;
+	margin: 0 auto;
+	padding: 5px;
+	padding-left: 10px;
 
 }
+.menu {
+	color: #dddddd;
+	font-family: Arial;
+	font-size: 11px;
+	padding: 5px;
+}
+.menu a {
+	text-decoration: underline;
+	font-weight: bold;
+	color: #ffffff;
+}
+.menu a:hover {
+	text-decoration: none;
+}
 </style>
+<script>
+function changeCommentsUrl(newUrl)
+{
+	var mydiv = document.getElementById("comments");  
+	var prev = mydiv.innerHTML;
+	mydiv.innerHTML = '<fb:comments href="'+newUrl+'" num_posts="10" width="600" colorscheme="dark"></fb:comments></div>';
+	FB.XFBML.parse(mydiv);  
+
+}
+function loadajoke(id)
+{
+	$.get("/joke/"+id+"/", function(result){
+		result = result.replace(/\n/g, "<br />");
+		$(".joke").html(result + "<br />...");
+		changeCommentsUrl("http://www.finishajoke.com/#" + id);
+	})
+}
+function hashchange(e) {
+	var hash = location.hash.substring(1);
+
+	if (!hash.length)
+		loadajoke(1)
+	else
+		loadajoke(hash)
+}
+$(window).bind( 'hashchange', hashchange);
+</script>
 </head>
 <body>
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "http://connect.facebook.net/fr_FR/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+<script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
 <h1>Finish a joke</h1>
-
-<div class="joke">
-A suicide bomber walks into a bar.<br />
-Bartender says "We don't serve suicide bombers here",<br />
-<br />
-<font class="finish">(finish in comment)</font><br />
-<br />
+<div class="menu">
+<a href="mailto:webmaster@finishajoke.com">submit a joke</a> | 
+other jokes:
+<a href="#1">1</a>
+<a href="#2">2</a> <br />
 </div>
 
-<div class="fb-comments-parent">
-<div class="fb-comments" data-href="http://www.finishajoke.com/" data-width="600" data-num-posts="10" data-colorscheme="dark"></div>
+<div class="joke"></div>
+<div class="finish">(finish in a comment)</div>
+<div id="comments">
 </div>
-
+<script>
+hashchange(0);
+</script>
 </body>
 </html>
