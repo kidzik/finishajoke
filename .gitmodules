@@ -5,3 +5,6 @@
 	path = node_modules/pattern
 	url = https://github.com/creationix/pattern.git
 
+[submodule "node_modules/step"]
+	path = node_modules/step
+	url = https://github.com/creationix/step.git
